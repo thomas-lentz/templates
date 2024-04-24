@@ -20,6 +20,7 @@ This is a DIY air quality monitor avaiable as a kit with a custom PCB and case f
 Flashing is simple as the kit comes with a standard Wemos D1 Mini with a USB header.
 
 Even so, since the device contains _both_ sensors _and_ an OLED display, it requires a custom build of Tasmota with both sets of drivers. The simplest way is to use the [Tasmota Special Firmware Web Installer](https://jason2866.github.io/Tasmota-specials/) to install **Tasmota Platinum**. Note: the chip has 4MB of flash, so can handle these larger firmware builds.
+Be aware that in the new Tasmota versions the standalone OLED drivers are deprecated. That you can't switch to diplaymodel 7 anymore (i2cdriver6 is missing), you have to use the uDriver setup (see also [Platinum issue](https://github.com/Jason2866/Tasmota-build/issues/16)) or build your own firmware, as already mentioned before.
 
 With the chip flashed, and the template applied, you should see all the relevant sensor readings in the Tasmota web UI. The only thing left is configuring the display, with the following commands:
 
@@ -27,7 +28,11 @@ With the chip flashed, and the template applied, you should see all the relevant
 backlog displaymodel 7; displayrotate 2; displayrows 8; displaymode 3; webbutton1 Toggle Display; friendlyname1 Air Monitor Display; power on
 ```
 
-You should now see the sensor readings scrolling on the display.
+You should now see the sensor readings scrolling on the display. If your model of Airgradient features a SH1106 it might be, that your text is upside down. in this case use:
+```console
+backlog displaymodel 7; displayrotate 0; displayrows 8; displaymode 3; webbutton1 Toggle Display; friendlyname1 Air Monitor Display; power on
+```
+The "displayrotate 0" does the trick.
 
 Note: For whatever reason, the display defaults to being switched off whenever Tasmota boots, and commands like `poweretain` and `poweronstate` don't seem to affect it. So I added a rule to do so:
 
